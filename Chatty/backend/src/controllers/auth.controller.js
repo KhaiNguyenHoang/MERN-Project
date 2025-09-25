@@ -75,6 +75,12 @@ export const login = async (req, res) => {
         );
         if (isPasswordCorrect) {
           const token = generateJwtToken(existingUser._id, res);
+          res.cookie("jwt", token, {
+            maxAge: 1000 * 60 * 60 * 24 * 7,
+            httpOnly: true,
+            sameSite: "strict",
+            secure: process.env.NODE_ENV !== "development",
+          });
           return res.status(200).json({
             code: 200,
             status: "success",
@@ -96,6 +102,23 @@ export const login = async (req, res) => {
       code: 500,
       status: "error",
       message: "Server error",
+    });
+  }
+};
+
+export const logout = (req, res) => {
+  if (res.cookie("jwt")) {
+    res.clearCookie("jwt");
+    return res.status(200).json({
+      code: 200,
+      status: "success",
+      message: "Logout successful",
+    });
+  } else {
+    return res.status(400).json({
+      code: 400,
+      status: "error",
+      message: "Logout failed. Please login again",
     });
   }
 };
