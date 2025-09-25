@@ -84,3 +84,34 @@ export const logout = async (req, res) => {
       .json({ code: 500, message: "Failed to logout", err: err.message });
   }
 };
+
+export const updateProfile = async (req, res) => {
+  try {
+    const { fullName, profilePic } = req.body;
+    if (!fullName || !profilePic)
+      return res
+        .status(400)
+        .json({ code: 400, message: "Please provide all fields" });
+
+    const user = await User.findById(req.user.id);
+    if (!user)
+      return res.status(400).json({ code: 400, message: "User not found" });
+
+    user.fullName = fullName;
+    user.profilePic = profilePic;
+
+    await user.save();
+
+    return res.status(200).json({
+      code: 200,
+      message: "Profile updated successfully",
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      code: 500,
+      message: "Failed to update profile",
+      err: err.message,
+    });
+  }
+};
