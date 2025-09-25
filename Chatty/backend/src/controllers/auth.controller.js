@@ -55,3 +55,47 @@ export const signup = async (req, res) => {
     });
   }
 };
+
+export const login = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    if (!email || !password) {
+      return res.status(400).json({
+        code: 400,
+        status: "error",
+        message: "Please provide all the required fields",
+        fieldsMissing: ["email", "password"],
+      });
+    } else {
+      const existingUser = await User.findOne({ email });
+      if (existingUser) {
+        const isPasswordCorrect = await bcrypt.compare(
+          password,
+          existingUser.password,
+        );
+        if (isPasswordCorrect) {
+          const token = generateJwtToken(existingUser._id, res);
+          return res.status(200).json({
+            code: 200,
+            status: "success",
+            message: "Login successful",
+            jwtToken: token,
+          });
+        } else {
+          return res.status(400).json({
+            code: 400,
+            status: "error",
+            message: "Incorrect password",
+          });
+        }
+      }
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      code: 500,
+      status: "error",
+      message: "Server error",
+    });
+  }
+};
