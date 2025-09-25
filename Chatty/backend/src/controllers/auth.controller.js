@@ -1,6 +1,7 @@
 import User from "../models/user.model.js";
 import jwtUtils from "../lib/jwt.js";
 import bcrypt from "bcryptjs";
+import cloudinary from "../lib/cloudinary.js";
 
 export const signUp = async (req, res) => {
   try {
@@ -29,7 +30,7 @@ export const signUp = async (req, res) => {
     return res.status(201).json({
       code: 201,
       message: "User created successfully",
-      jwt: jwtUtils.generateToken(newUser, res),
+      jwt: jwtUtils.generateToken(newUser._id, res),
     });
   } catch (err) {
     console.error(err);
@@ -53,7 +54,7 @@ export const login = async (req, res) => {
     if (!isPasswordCorrect)
       return res.status(400).json({ code: 400, message: "Incorrect password" });
 
-    const token = jwtUtils.generateToken(user, res);
+    const token = jwtUtils.generateToken(user._id, res);
 
     res.cookie("jwt", token, {
       maxAge: 7 * 24 * 60 * 60 * 1000,
