@@ -1,4 +1,9 @@
-import { signUp, login, logout } from "../controllers/auth.controller.js";
+import {
+  signUp,
+  login,
+  logout,
+  updateProfile,
+} from "../controllers/auth.controller.js";
 import express from "express";
 import protectRoute from "../middleware/auth.middleware.js";
 
@@ -8,5 +13,5 @@ router.post("/signup", signUp);
 router.post("/login", login);
 router.post("/logout", logout);
 
-router.put("/update-profile", protectRoute, async (req, res) => {});
+router.put("/update-profile", protectRoute, updateProfile);
 export default router;

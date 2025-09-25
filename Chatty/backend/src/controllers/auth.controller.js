@@ -98,8 +98,12 @@ export const updateProfile = async (req, res) => {
       return res.status(400).json({ code: 400, message: "User not found" });
 
     user.fullName = fullName;
-    user.profilePic = profilePic;
-
+    const uploadRes = await cloudinary.uploader.upload(profilePic, {
+      public_id: user.id,
+      tags: "profile",
+      use_filename: true,
+    });
+    user.profilePic = uploadRes.secure_url;
     await user.save();
 
     return res.status(200).json({
