@@ -1,18 +1,27 @@
-import express from "express";
-import dotenv from "dotenv";
-import authRouter from "./routes/auth.route.js";
 import connectDB from "./lib/db.js";
-import userRouter from "./routes/user.route.js";
-
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import authRoute from "./routes/auth.route.js";
 dotenv.config();
+
 const app = express();
-const port = process.env.PORT || 5000;
-
 app.use(express.json());
+app.use(cors());
 
-app.use("/api/auth", authRouter);
-app.use("/api/user", userRouter);
-app.listen(port, () => {
-  connectDB();
-  console.log(`Server started at http://localhost:${port}`);
-});
+const port = process.env.PORT || 5001;
+
+app.use("/api/auth", authRoute);
+const startServer = async () => {
+  try {
+    await connectDB();
+    app.listen(port, () => {
+      console.log(`Server is running on port ${port}`);
+    });
+  } catch (err) {
+    console.error("Failed to start server:", err.message);
+    process.exit(1);
+  }
+};
+
+startServer();
