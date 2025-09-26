@@ -1,5 +1,5 @@
 import React from "react";
-import Navbar from "./Navbar.jsx";
+import Navbar from "./components/Navbar.jsx";
 import { Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage.jsx";
 import SignUpPage from "./pages/SignUpPage.jsx";
