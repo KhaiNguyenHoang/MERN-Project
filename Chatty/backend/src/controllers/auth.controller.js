@@ -120,3 +120,12 @@ export const updateProfile = async (req, res) => {
     });
   }
 };
+
+export const checkAuth = async (req, res) => {
+  try {
+     
+  } catch (err)
+  {
+
+  }
+}
