@@ -15,6 +15,7 @@ app.use(cookieParser());
 const port = process.env.PORT || 5001;
 
 app.use("/api/auth", authRoute);
+app.use("/api/message", authRoute);
 const startServer = async () => {
   try {
     await connectDB();
